@@ -4,15 +4,15 @@
 #include <ctime>
 #include <cstdlib>
 #include <conio.h>
-#define MAXSCORE 10000
-//#define DEBUG
+#define MAXSCORE (2 << 16)
+#define DEBUG
 #ifdef DEBUG
 #define DPRINT(...) fprintf(stderr, __VA_ARGS__);
 #define dprint() print()
 #else  /* DEBUG */
 #define DPRINT(...)
 #endif /* DEBUG */
-#define INF 1000000
+#define INF (2 << 17)
 using namespace std;
 
 struct state{
@@ -129,11 +129,12 @@ void generate_tree(state* current, bool turn){
     for(int i = 0; i < 9; ++i){
         if(current->next_states[i] != nullptr){
             if(current->next_states[i]->who_won())
-                win_ratio++;
-            sum += current->next_states[i]->score;
+                sum += current->next_states[i]->score / 2;
+            else
+                sum += current->next_states[i]->score / 4;
         }
     }
-    current->score = (sum * win_ratio) / current->next_state_cnt;
+    current->score = sum / current->next_state_cnt;
 }
 
 void player_move(state** current){
