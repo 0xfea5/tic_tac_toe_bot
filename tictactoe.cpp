@@ -8,6 +8,7 @@
 #define DEBUG
 #ifdef DEBUG
 #define DPRINT(...) fprintf(stderr, __VA_ARGS__);
+#define dprint() print()
 #else  /* DEBUG */
 #define DPRINT(...)
 #endif /* DEBUG */
@@ -97,6 +98,10 @@ struct state{
         }
         cout << '\n';
     }
+    #ifndef DEBUG
+    void dprint(){
+    }
+    #endif // DEBUG
 };
 
 void generate_tree(state* current, bool turn){
@@ -120,7 +125,7 @@ void generate_tree(state* current, bool turn){
             current->next_state_cnt++;
         }
     }
-    int sum = 0, win_ratio = 0;
+    int sum = 0, win_ratio = 1;
     for(int i = 0; i < 9; ++i){
         if(current->next_states[i] != nullptr){
             if(current->next_states[i]->who_won())
@@ -146,8 +151,8 @@ void pc_move(state** current, bool player_first){
     for(int i = 0; i < 9; ++i){
         if((*current)->next_states[i] == nullptr) continue;
 
-        cout << (*current)->next_states[i]->score << '\n';
-        (*current)->next_states[i]->print();
+        DPRINT("%d\n",(*current)->next_states[i]->score);
+        (*current)->next_states[i]->dprint();
 
         if(player_first){
             if((*current)->next_states[i]->score < pc_score){
@@ -207,7 +212,7 @@ int main(){
         }
     }
     DPRINT("%d\n", current->score);
-    current->print();
+    current->dprint();
     switch (current->who_won()){
         case 1 :
             printf("%s won!\n", player_first ? "Player" : "PC");
