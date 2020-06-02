@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <conio.h>
 #define MAXSCORE (2 << 16)
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define DPRINT(...) fprintf(stderr, __VA_ARGS__);
 #define dprint() print()
