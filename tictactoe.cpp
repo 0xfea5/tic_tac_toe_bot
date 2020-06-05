@@ -3,16 +3,19 @@
 #include <cassert>
 #include <ctime>
 #include <cstdlib>
-#include <conio.h>
+
 #define MAXSCORE (2 << 16)
-//#define DEBUG
+#define INF (2 << 17)
+#define SQUARE(x) (x) * (x)
+
+#define DEBUG
 #ifdef DEBUG
 #define DPRINT(...) fprintf(stderr, __VA_ARGS__);
 #define dprint() print()
 #else  /* DEBUG */
 #define DPRINT(...)
 #endif /* DEBUG */
-#define INF (2 << 17)
+
 using namespace std;
 
 struct state{
@@ -128,13 +131,15 @@ void generate_tree(state* current, bool turn){
     int sum = 0, win_ratio = 1;
     for(int i = 0; i < 9; ++i){
         if(current->next_states[i] != nullptr){
-            if(current->next_states[i]->who_won())
-                sum += current->next_states[i]->score / 2;
+            if(current->next_states[i]->who_won()){
+                current->score = current->next_states[i]->score;
+                return;
+            }
             else
-                sum += current->next_states[i]->score / 4;
+                current->score += current->next_states[i]->score;
         }
     }
-    current->score = sum / current->next_state_cnt;
+    current->score /= current->next_state_cnt;
 }
 
 void player_move(state** current){
